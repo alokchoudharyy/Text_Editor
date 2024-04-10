@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Text Editor</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    #editor {
+        width: 100%;
+        height: 400px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-sizing: border-box;
+        outline: none;
+    }
+    button {
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    /* Hide the file input */
+    #fileInput {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <textarea id="editor" placeholder="Start typing..."></textarea>
+    <button id="saveBtn">Save</button>
+    <button id="openBtn">Open</button>
+    <!-- Hidden file input element -->
+    <input type="file" id="fileInput" accept="text/plain">
+
+    <script>
+        // Save text to file
+        function saveToFile() {
+            var textToSave = document.getElementById("editor").value;
+            var blob = new Blob([textToSave], { type: "text/plain" });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "text.txt";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Open text file
+        function openFile(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                var text = reader.result;
+                document.getElementById('editor').value = text;
+            };
+            reader.readAsText(input.files[0]);
+        }
+
+        // Event listeners
+        document.getElementById("saveBtn").addEventListener("click",  function saveToFile() {
+            var textToSave = document.getElementById("editor").value;
+            var blob = new Blob([textToSave], { type: "text/plain" });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "text.txt";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+        // Trigger the click event of the hidden file input when "Open" button is clicked
+        document.getElementById("openBtn").addEventListener("click", function() {
+            document.getElementById("fileInput").click();
+        });
+        // Listen for file selection using the hidden file input
+        document.getElementById("fileInput").addEventListener("change", function openFile(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                var text = reader.result;
+                document.getElementById('editor').value = text;
+            };
+            reader.readAsText(input.files[0]);
+        });
+    </script>
+</body>
+</html>
